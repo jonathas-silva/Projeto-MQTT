@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         //mqttClient.connect(this, TOPICO)
 
+        binding.btnEnviar.isEnabled = false
 
         listen.observe(this, Observer {
             binding.btnConectar.text = "Desconectar"
@@ -61,6 +62,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        binding.btnEnviar.setOnClickListener {
+            val mensagem = binding.inputTopico.text.toString()
+            mqttClient.publish(TOPICO, mensagem)
+            binding.inputTopico.setText("")
+        }
+
         //MQTTClient().mudarCorExterna(::botaoConectado)
 
 
@@ -71,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnConectar.setBackgroundColor(cor)
         binding.btnConectar.text = "Desconectar"
         Toast.makeText(this, "Conectado e subscrito!!", Toast.LENGTH_SHORT).show()
+        binding.btnEnviar.isEnabled = true
 
     }
 
@@ -78,6 +86,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnConectar.setBackgroundColor(cor)
         binding.btnConectar.text = "Conectar"
         Toast.makeText(this, "Desconectado do broker!", Toast.LENGTH_SHORT).show()
+        binding.btnEnviar.isEnabled = false
     }
 
     private fun testarConexao(): Boolean {
