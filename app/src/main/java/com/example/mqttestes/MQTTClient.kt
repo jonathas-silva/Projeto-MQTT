@@ -45,6 +45,9 @@ class MQTTClient {
                     Log.d(TAG, "Connection success")
                     Log.d(TAG, "Trying to subscribe to $topic")
                     subscribe(topic, 1)
+                    context.runOnUiThread {
+                        context.botaoConectado(0xff4caf50.toInt())
+                    }
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -64,7 +67,7 @@ class MQTTClient {
             mqttClient.subscribe(topic, qos, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG, "Subscribed to $topic")
-
+                    //mudarCorExterna {  }
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -112,11 +115,14 @@ class MQTTClient {
         }
     }
 
-    fun disconnect() {
+    fun disconnect(context: MainActivity) {
         try {
             mqttClient.disconnect(null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG, "Disconnected")
+                    context.runOnUiThread {
+                        context.botaoDesconectado()
+                    }
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -141,6 +147,12 @@ class MQTTClient {
             false
         }
     }
+
+//    fun mudarCorExterna(funcaoMudarCor: (cor: Int) -> Unit) {
+//        val corVerde = 0xff4caf50.toInt()
+//
+//        funcaoMudarCor(corVerde)
+//    }
 
 
 }
