@@ -148,11 +148,4 @@ class MQTTClient {
         }
     }
 
-//    fun mudarCorExterna(funcaoMudarCor: (cor: Int) -> Unit) {
-//        val corVerde = 0xff4caf50.toInt()
-//
-//        funcaoMudarCor(corVerde)
-//    }
-
-
 }

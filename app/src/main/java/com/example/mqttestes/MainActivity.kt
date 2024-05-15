@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.btnConectar.setOnClickListener {
-            if (binding.btnConectar.text == "Conectar") {
+            if (!testarConexao()) {
                 mqttClient.connect(this, TOPICO)
             } else {
                 mqttClient.disconnect(this)
@@ -80,15 +80,17 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Desconectado do broker!", Toast.LENGTH_SHORT).show()
     }
 
-    fun testarConexao() {
+    private fun testarConexao(): Boolean {
 
         var conectado = false
 
         if (mqttClient.isConnected()) {
-            Toast.makeText(this, "CONECTADO!", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "CONECTADO!", Toast.LENGTH_SHORT).show()
+            conectado = true
         } else {
-            Toast.makeText(this, "NÃO CONECTADO!!", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "NÃO CONECTADO!!", Toast.LENGTH_SHORT).show()
         }
+    return conectado
     }
 }
 
