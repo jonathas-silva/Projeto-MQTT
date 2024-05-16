@@ -27,6 +27,10 @@ class MQTTClient {
         mqttClient.setCallback(object : MqttCallback {
             override fun messageArrived(topic: String?, message: MqttMessage?) {
                 Log.d(TAG, "Receive message: ${message.toString()} from topic: $topic")
+                context.runOnUiThread {
+                    context.receberMensagem(message.toString())
+
+                }
             }
 
             override fun connectionLost(cause: Throwable?) {

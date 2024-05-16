@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.mqttestes.databinding.ActivityMainBinding
+import java.util.Calendar
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,6 +18,8 @@ class MainActivity : AppCompatActivity() {
         const val TOPICO = "JONATHAS/TESTE"
 
     }
+
+    private var listaDeMensagens = ""
 
     private val mqttClient = MQTTClient()
 
@@ -68,8 +71,6 @@ class MainActivity : AppCompatActivity() {
             binding.inputTopico.setText("")
         }
 
-        //MQTTClient().mudarCorExterna(::botaoConectado)
-
 
     }
 
@@ -100,6 +101,46 @@ class MainActivity : AppCompatActivity() {
             //Toast.makeText(this, "NÃO CONECTADO!!", Toast.LENGTH_SHORT).show()
         }
     return conectado
+    }
+
+
+    fun receberMensagem(msg: String){
+
+        /*
+        Apenas concatena as mensagens com a mensagem da lista e atualiza o textView,
+        que é zerado toda vez que o app reinicia (todo oncreate)
+        */
+
+        //Só vai concatenar a mensagem se começar com a string massa
+        if(msg.startsWith("massa", true)){
+            val formatted = horaAtualFormatada()
+
+            val mensagemCompleta = "$formatted - $msg gramas\n"
+
+            listaDeMensagens+=mensagemCompleta
+            binding.textRecebidas.text = listaDeMensagens
+
+            //Vamos estrair o valor da mensagem
+            val numeroRegex = Regex("\\d+")
+
+            val matchResult = numeroRegex.find(msg)
+            val numeroString = matchResult?.value
+            val numeroInteiro = numeroString?.toIntOrNull()
+            val pesagemFormatada = numeroInteiro.toString() + "g"
+            binding.txtPesagem.text = pesagemFormatada
+            val infoAtualizado = "Atualizado em $formatted"
+            binding.txtAtualizado.text = infoAtualizado
+        }
+
+    }
+
+    private fun horaAtualFormatada(): String {
+        val c = Calendar.getInstance()
+        val month = c.get(Calendar.MONTH).toString()
+        val day = c.get(Calendar.DAY_OF_MONTH).toString()
+        val hour = c.get(Calendar.HOUR_OF_DAY).toString()
+        val minute = c.get(Calendar.MINUTE).toString()
+        return "$day/$month $hour:$minute"
     }
 }
 
