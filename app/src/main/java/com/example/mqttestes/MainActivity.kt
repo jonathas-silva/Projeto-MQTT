@@ -1,12 +1,13 @@
 package com.example.mqttestes
 
+import android.opengl.Visibility
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.MutableLiveData
 import com.example.mqttestes.databinding.ActivityMainBinding
 import java.util.Calendar
 
@@ -25,9 +26,6 @@ class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
-
-
-    private val listen = MutableLiveData<Boolean>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,10 +137,20 @@ class MainActivity : AppCompatActivity() {
         return "$day/$month $hour:$minute"
     }
 
-    fun atualizar() {
+    private fun atualizar() {
         if (testarConexao()) {
             mqttClient.publish(TOPICO, "SEND_MASS")
         }
+    }
+
+    fun ativarProgressBar() {
+        binding.btnConectar.visibility = View.INVISIBLE
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    fun desativarProgressBar() {
+        binding.btnConectar.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
     }
 }
 

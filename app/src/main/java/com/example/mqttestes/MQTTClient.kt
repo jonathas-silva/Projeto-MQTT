@@ -22,6 +22,11 @@ class MQTTClient {
     }
 
     fun connect(context: MainActivity, topic: String) {
+
+        context.runOnUiThread {
+            context.ativarProgressBar()
+        }
+
         val serverURI = "tcp://broker.emqx.io:1883"
         mqttClient = MqttAndroidClient(context, serverURI, "kotlin_client", Ack.AUTO_ACK)
         mqttClient.setCallback(object : MqttCallback {
@@ -29,7 +34,6 @@ class MQTTClient {
                 Log.d(TAG, "Receive message: ${message.toString()} from topic: $topic")
                 context.runOnUiThread {
                     context.receberMensagem(message.toString())
-
                 }
             }
 
@@ -51,12 +55,15 @@ class MQTTClient {
                     subscribe(topic, 1)
                     context.runOnUiThread {
                         context.botaoConectado(0xff4caf50.toInt())
+                        context.desativarProgressBar()
                     }
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
                     Log.d(TAG, "Connection failure")
-
+                    context.runOnUiThread {
+                        context.desativarProgressBar()
+                    }
                 }
             })
         } catch (e: MqttException) {

@@ -74,4 +74,16 @@
         app:layout_constraintBottom_toTopOf="@+id/textRecebidas"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.Material.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/red"
+        app:layout_constraintBottom_toBottomOf="@+id/btnConectar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/btnConectar" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
