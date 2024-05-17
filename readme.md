@@ -1,6 +1,6 @@
 # :paw_prints: Aplicativo Medidor de Ração
 
-Esta aplicação tem como objetivo monitorar os níveis de ração de animais domésticos em comedouros de animais. 📊
+Esta aplicação tem como objetivo monitorar os níveis de ração de animais domésticos em comedouros de animais.
 
 ## ✨ Descrição
 
@@ -12,4 +12,9 @@ Desenvolvido em **Kotlin**, este aplicativo trabalha em parceria com o dispositi
 - 📱 Notificações push quando o nível de ração estiver baixo.
 - 📊 Histórico de consumo de ração.
 
+# 🛠️ Tecnologias Utilizadas
+- Kotlin
+- NodeMCU - ESP8266
+- Comunicação via Protocolo MQTT
+- C
 
