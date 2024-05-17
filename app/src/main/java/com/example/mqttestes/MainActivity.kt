@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.example.mqttestes.databinding.ActivityMainBinding
 import java.util.Calendar
 
@@ -46,14 +45,13 @@ class MainActivity : AppCompatActivity() {
         //geraria um erro de nullPointerException. Para resolver isso, segundo a dev mailing list da paho,
         //é interessante subscrever no método onSucess, o que garante a conexão.
 
+        //O Botão de atualizar vai iniciar desativado, e será ativado no método de sucesso do connect
+        binding.btnAtualizar.isEnabled = false
 
-        //mqttClient.connect(this, TOPICO)
 
-        binding.btnEnviar.isEnabled = false
+        //Vai tentar conectar no onCreate sempre
+        mqttClient.connect(this, TOPICO)
 
-        listen.observe(this, Observer {
-            binding.btnConectar.text = "Desconectar"
-        })
 
 
 
@@ -65,10 +63,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        binding.btnEnviar.setOnClickListener {
-            val mensagem = binding.inputTopico.text.toString()
-            mqttClient.publish(TOPICO, mensagem)
-            binding.inputTopico.setText("")
+        binding.btnAtualizar.setOnClickListener {
+            atualizar()
         }
 
 
@@ -79,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnConectar.setBackgroundColor(cor)
         binding.btnConectar.text = "Desconectar"
         Toast.makeText(this, "Conectado e subscrito!!", Toast.LENGTH_SHORT).show()
-        binding.btnEnviar.isEnabled = true
+        binding.btnAtualizar.isEnabled = true
 
     }
 
@@ -87,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnConectar.setBackgroundColor(cor)
         binding.btnConectar.text = "Conectar"
         Toast.makeText(this, "Desconectado do broker!", Toast.LENGTH_SHORT).show()
-        binding.btnEnviar.isEnabled = false
+        binding.btnAtualizar.isEnabled = false
     }
 
     private fun testarConexao(): Boolean {
@@ -100,11 +96,11 @@ class MainActivity : AppCompatActivity() {
         } else {
             //Toast.makeText(this, "NÃO CONECTADO!!", Toast.LENGTH_SHORT).show()
         }
-    return conectado
+        return conectado
     }
 
 
-    fun receberMensagem(msg: String){
+    fun receberMensagem(msg: String) {
 
         /*
         Apenas concatena as mensagens com a mensagem da lista e atualiza o textView,
@@ -112,12 +108,12 @@ class MainActivity : AppCompatActivity() {
         */
 
         //Só vai concatenar a mensagem se começar com a string massa
-        if(msg.startsWith("massa", true)){
+        if (msg.startsWith("massa", true)) {
             val formatted = horaAtualFormatada()
 
             val mensagemCompleta = "$formatted - $msg gramas\n"
 
-            listaDeMensagens+=mensagemCompleta
+            listaDeMensagens += mensagemCompleta
             binding.textRecebidas.text = listaDeMensagens
 
             //Vamos estrair o valor da mensagem
@@ -141,6 +137,12 @@ class MainActivity : AppCompatActivity() {
         val hour = c.get(Calendar.HOUR_OF_DAY).toString()
         val minute = c.get(Calendar.MINUTE).toString()
         return "$day/$month $hour:$minute"
+    }
+
+    fun atualizar() {
+        if (testarConexao()) {
+            mqttClient.publish(TOPICO, "SEND_MASS")
+        }
     }
 }
 
