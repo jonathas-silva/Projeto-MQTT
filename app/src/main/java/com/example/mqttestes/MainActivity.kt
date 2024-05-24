@@ -1,7 +1,9 @@
 package com.example.mqttestes
 
+import android.content.Intent
 import android.opengl.Visibility
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -65,6 +67,15 @@ class MainActivity : AppCompatActivity() {
             atualizar()
         }
 
+        binding.btnAdicionar.setOnClickListener {
+            val intent = Intent(Intent(Intent.ACTION_VOICE_COMMAND))
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(intent)
+
+            val tts : TTS = TTS(this,"Adicione um alarme para às 11 horas", true)
+
+
+        }
 
     }
 
